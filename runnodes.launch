@@ -1,0 +1,26 @@
+<launch>
+
+  <!--RPLiDAR-->
+  <node name="rplidarNode"          pkg="rplidar_ros"  type="rplidarNode" output="screen">
+    <param name="serial_port"       type="string" value="/dev/ttyUSB-RPLA1"/>
+    <param name="serial_baudrate"   type="int"    value="115200"/>
+    <param name="frame_id"          type="string" value="laser"/>
+    <param name="inverted"          type="bool"   value="false"/>
+    <param name="angle_compensate"  type="bool"   value="true"/>
+  </node>
+
+  <!-- Publish left and right ticks -->
+  <node pkg="robot_control" type="tickpy.py" name="ticks" output="screen"/>
+
+  <!-- Publish odom data -->
+  <!-- <node pkg="robot_control" type="odom_node" name="odomData" output="screen"/>-->
+
+  <!-- Listen to cmd_vel for robot movement-->
+  <node pkg="robot_control" type="simple_control_node" name="simpleController" output="screen"/>
+
+  <!-- LiDAR connection (height of lidar from ground in 0.17 metres)-->
+  <!-- <node pkg="tf" type="static_transform_publisher" name="laser_connection" args="0 0 0.17 0 0 0 base_footprint laser 100"/>-->
+
+  <node pkg="tf" type="static_transform_publisher" name="base_connection" args="0 0 0 0 0 0 base_footprint base_link 100"/>
+  <node pkg="tf" type="static_transform_publisher" name="laser_connection" args="0 0 0.17 0 0 0 base_link laser 100"/>
+</launch>
